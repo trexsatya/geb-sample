@@ -3,6 +3,7 @@ plugins {
     id "groovy"
     id "com.github.erdi.webdriver-binaries" version "2.2"
     id "com.github.erdi.idea-base" version "2.2"
+    id 'com.adarshr.test-logger' version '3.1.0'
 }
 
 ext {
@@ -12,7 +13,7 @@ ext {
     ext {
         gebVersion = '5.1'
         seleniumVersion = '3.14.0'
-        chromeDriverVersion = '79.0.3945.36'
+        chromeDriverVersion = '96.0.4664.45'
         geckoDriverVersion = '0.26.0'
     }
 }
@@ -23,15 +24,18 @@ repositories {
 
 dependencies {
     // If using Spock, need to depend on geb-spock
-    testCompile "org.gebish:geb-spock:$gebVersion"
+    implementation "org.gebish:geb-spock:5.1"
+
+    implementation 'org.seleniumhq.selenium:selenium-firefox-driver:4.1.0'
+    implementation 'org.seleniumhq.selenium:selenium-support:4.1.0'
 
     // If using JUnit, need to depend on geb-junit
-    testCompile "org.gebish:geb-junit4:$gebVersion"
-    testCompile "junit:junit:4.13.2"
+    implementation "org.gebish:geb-junit4:5.1"
+    implementation "junit:junit:4.13.2"
 
     // Drivers
-    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testCompile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    implementation "org.seleniumhq.selenium:selenium-chrome-driver:4.1.0"
+    implementation "org.seleniumhq.selenium:selenium-firefox-driver:4.1.0"
 }
 
 webdriverBinaries {
@@ -68,4 +72,23 @@ tasks.withType(Test) {
 
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.memoryMaximumSize = '256m'
+}
+
+testlogger {
+    theme 'standard'
+    showExceptions true
+    showStackTraces true
+    showFullStackTraces false
+    showCauses true
+    slowThreshold 2000
+    showSummary true
+    showSimpleNames false
+    showPassed true
+    showSkipped true
+    showFailed true
+    showStandardStreams true
+    showPassedStandardStreams true
+    showSkippedStandardStreams true
+    showFailedStandardStreams true
+    logLevel 'lifecycle'
 }

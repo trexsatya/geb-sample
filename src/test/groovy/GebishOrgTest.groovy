@@ -8,16 +8,12 @@ class GebishOrgTest extends GebReportingTest {
 
     @Test
     void canGetToTheCurrentBookOfGeb() {
-        to GebishOrgHomePage
+        to HomePage
 
-        manualsMenu.open()
-
-        //first link is for the current manual
-        assert manualsMenu.links[0].text().startsWith("current")
-
-        manualsMenu.links[0].click()
-
-        at TheBookOfGebPage
+        ["https://www.8notes.com/guitar_chord_chart/C.asp"].findAll {it.trim().length() > 2 }
+                .each {
+            scrap(it)
+        }
     }
 
 }

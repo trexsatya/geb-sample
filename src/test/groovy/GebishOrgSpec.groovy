@@ -4,7 +4,7 @@ class GebishOrgSpec extends GebSpec {
 
     def "can get to the current Book of Geb"() {
         when:
-        to GebishOrgHomePage
+        to HomePage
 
         and:
         manualsMenu.open()

@@ -1,6 +1,6 @@
 /*
 	This is the Geb configuration file.
-	
+
 	See: http://www.gebish.org/manual/current/#configuration
 */
 
@@ -14,7 +14,7 @@ waiting {
 }
 
 environments {
-	
+
 	// run via “./gradlew chromeTest”
 	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
 	chrome {
@@ -30,7 +30,7 @@ environments {
 			new ChromeDriver(o)
 		}
 	}
-	
+
 	// run via “./gradlew firefoxTest”
 	// See: http://code.google.com/p/selenium/wiki/FirefoxDriver
 	firefox {
@@ -43,4 +43,4 @@ environments {
 
 // To run the tests with all browsers just run “./gradlew test”
 
-baseUrl = "http://gebish.org"
+baseUrl = "https://www.8notes.com/guitar_chord_chart/C.asp"
