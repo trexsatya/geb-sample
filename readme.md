@@ -21,11 +21,13 @@ To run with all, you can run:
 
 Replace `./gradlew` with `gradlew.bat` in the above examples if you're on Windows.
 
-## Questions and issues
 
-Please ask questions on [Geb user mailing list][mailing_list] and raise issues in [Geb issue tracker][issue_tracker].
+test.groovy scraping
+https://y2down.cc/en/youtube-playlist.html
+https://downsub.com/
 
+Inject JQUERY Bookmark:  <br>
+`javascript: (function (){    function l(u, i) {        var d = document;        if (!d.getElementById(i)) {            var s = d.createElement('script');            s.src = u;            s.id = i;            d.body.appendChild(s);        }    } l('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js', 'jquery')})();`
 
-[build_status]: https://circleci.com/gh/geb/geb-example-gradle/tree/master.svg?style=shield&circle-token=38eb8de9af8f889922b91624a7943c474c0c3617 "Build Status"
-[mailing_list]: https://groups.google.com/forum/#!forum/geb-user
-[issue_tracker]: https://github.com/geb/issues/issues
+Get Links With Subtitles From YT: <br>
+`javascript: (function (){ let urls = $('div[aria-label="Closed captions"]').map((i, e) => $(e).parents("div.ytd-grid-video-renderer").find("a#thumbnail.yt-simple-endpoint").attr("href")).toArray().map(it => %60https://www.youtube.com${it}%60); console.log(urls)  })();`
