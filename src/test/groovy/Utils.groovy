@@ -5,7 +5,7 @@ import wslite.rest.ContentType
 import wslite.rest.RESTClient
 
 class Utils {
-    static def processedFile = new File("/Users/satyendra.kumar/IdeaProjects/geb-sample/src/test/groovy/processed")
+    static def processedFile = new File("/Users/satyendra.kumar/IdeaProjects/geb-sample/src/SrtDownloadAndTranslation/groovy/processed")
 
     static def processed() {
         processedFile.readLines()
@@ -16,6 +16,7 @@ class Utils {
     }
 
     static void main(String[] args) {
+
         def data = readCSV(downloadedFile("BundleToReenrich.txt"))
         def client = new RESTClient()
         client.defaultAcceptHeader = ContentType.JSON
@@ -23,94 +24,6 @@ class Utils {
         //        client.post([])
         def expected = """
 """.split("\n").collect { it.split(",") }.collectEntries {[(it[0]): it[1]] }
-
-//        readCSV(downloadedFile("output (9).txt")).each {
-//            def matches = expected[it.aggregate_krn] == it.dics_count
-//            if(!matches) {
-//                println("doesn't match for $it")
-//            } else {
-//                println("matches for $it")
-//            }
-//        }
-
-        print()
-        def domiciles = getDomiciles()
-        def out = []
-
-//        readCSV(downloadedFile("Coeo_DuplicateDICs_OpenClaims.csv")).each { rec ->
-//            def cc = domiciles.find { it.id == rec.domicile}.country_code
-//            rec['domicile'] = cc
-//            out << rec
-//        }
-//
-//        out = out.toSorted { it.domicile }
-//        println out
-//        writeCSV(out, downloadedFile("1_Coeo_DuplicateDICs_OpenClaims.csv"))
-
-
-//        writeCSV(combineFiles("/Users/satyendra.kumar/Downloads/duplicated_dics_2"), downloadedFile("duplicate_dics.csv"))
-
-//        println combineFiles("/Users/satyendra.kumar/Downloads/duplicate_dics").take(2)
-
-
-//        paginate((11296665..34005660), 20000).each {
-//            def query = """
-//with dics as
-//(
-//  select * from
-//   ( select SE.key business_event_id, DIC.debt_item di_id, DIC.id dic_id, aggregate_id
-//                       , row_number() over(partition by SE.aggregate_version, SE.aggregate_id, DIC.debt_item, DIC.type, change_amount, transaction_id, dca_reference) rn
-//                  from debt_item_change DIC
-//                           join sal_event SE on DIC.sal_event = SE.id
-//                  where dic.id >= ${it[0]} and dic.id <= ${it[1]}
-// ) T where rn > 1
-//)
-//select C.key, C.state, DG.key, dca.key, business_event_id, DI.key debt_item, dics.dic_id from
-//   Claim C
-//   join debt D on D.claim = C.id
-//   join debt_item DI on DI.debt = D.id
-//   join DICs on DICs.di_id = DI.id
-//   join assignment A on A.claim = C.id
-//   join dca_client DC on A.dca_client = DC.id
-//   join dca on DC.dca = dca.id
-//   join dca_group DG on dca.dca_group = DG.id
-//   where not C.is_dry_run
-//;
-//with dics as
-//(
-//  select * from
-//   ( select SE.key business_event_id, DIC.debt_item di_id, DIC.id dic_id, aggregate_id
-//                       , row_number() over(partition by SE.aggregate_version, SE.aggregate_id, DIC.debt_item, DIC.type, change_amount, transaction_id, dca_reference) rn
-//                  from debt_item_change DIC
-//                           join sal_event SE on DIC.sal_event = SE.id
-//                  where dic.id >= ${it[1] - 100} and dic.id <= ${it[1] + 100}
-// ) T where rn > 1
-//)
-//select C.key, C.state, DG.key, dca.key, business_event_id, DI.key debt_item, dics.dic_id from
-//   Claim C
-//   join debt D on D.claim = C.id
-//   join debt_item DI on DI.debt = D.id
-//   join DICs on DICs.di_id = DI.id
-//   join assignment A on A.claim = C.id
-//   join dca_client DC on A.dca_client = DC.id
-//   join dca on DC.dca = dca.id
-//   join dca_group DG on dca.dca_group = DG.id
-//   where not C.is_dry_run
-//;
-//"""
-//
-//            println(query)
-//        }
-
-//        def multipleAssignedClaims = readCSV(downloadedFile("mutiple_assigned_claims.txt")).collect { it['key']}
-//
-//        def duplicates = readCSV(downloadedFile("coeo_duplicate_dics.csv"))
-//
-//        def claimsWithDuplicateDICs = duplicates.collect { "'${it.claim_key}'"} as Set
-//
-//        claimsWithDuplicateDICs.collate(2000).each {
-//            println(claimsWithDuplicateDICs.join(","))
-//        }
 
     }
 
