@@ -5,7 +5,7 @@ import wslite.rest.ContentType
 import wslite.rest.RESTClient
 
 class Utils {
-    static def processedFile = new File("/Users/satyendra.kumar/IdeaProjects/geb-sample/src/SrtDownloadAndTranslation/groovy/processed")
+    static def processedFile = new File("/Users/satyendra.kumar/IdeaProjects/geb-sample/src/TranslateSrtFiles/groovy/processed")
 
     static def processed() {
         processedFile.readLines()

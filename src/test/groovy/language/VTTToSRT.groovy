@@ -1,3 +1,4 @@
+package language
 
 import groovy.io.FileType
 
@@ -12,9 +13,9 @@ class VTTToSRT {
      * @throws java.io.IOException
      */
     static void main(String[] args) throws IOException {
-        def path = new File("/Users/satyendra.kumar/Documents/Swedish_Media/All_Subs/SVT");
-        listFilesRecursively(path, ".vtt").each {
-            translateVTTToSRT(it)
+        def path = new File("/Users/satyendra.kumar/Documents/Swedish_Media/All_Subs/");
+        listFilesRecursively(path, ".vtt").each { file ->
+            translateVTTToSRT(file)
         }
 
 //        removeVTTFiles(path)
@@ -69,7 +70,7 @@ class VTTToSRT {
         return absPath.take(absPath.lastIndexOf('.'))
     }
 
-    private static def listFilesRecursively(File directoryPath, String extensions) {
+    static List<File> listFilesRecursively(File directoryPath, String extensions) {
         def res = []
         directoryPath.eachFileRecurse(FileType.FILES) {
             if(it.name.endsWith(extensions)) {
@@ -78,6 +79,7 @@ class VTTToSRT {
         }
         return res
     }
+
     private static File [] getVTT(File directoryPath, boolean recursive) {
         String[] extensions = new String[]{"vtt", "VTT"};
         List<File> files = listFilesRecursively(directoryPath, ".vtt");

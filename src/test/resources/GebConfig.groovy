@@ -24,6 +24,5 @@ environments {
 	}
 }
 
-// To run the tests with all browsers just run “./gradlew SrtDownloadAndTranslation”
 
 baseUrl = "https://www.8notes.com/guitar_chord_chart/C.asp"

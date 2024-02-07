@@ -1,61 +1,15 @@
 import geb.Browser
+import language.SRTParser
+import language.Subtitle
 
 import java.awt.Toolkit
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.DataFlavor
 import java.util.concurrent.CompletableFuture
 
-System.setProperty("webdriver.gecko.driver", "/Users/satyendra.kumar/Documents/MyProjects/lib/geckodriver")
+System.setProperty("webdriver.gecko.driver",
+                   "/Users/satyendra.kumar/Documents/PersonalProjects/geb-sample/lib/geckodriver")
 
-def downloadVideoAndSubtitle(youtubeUrl) {
-    Browser.drive {
-        go "https://downsub.com/?url=$youtubeUrl"
-
-        def videoWithSubtitle = { $("a", text: "Download Full Video With Subtitle") }
-        waitFor {
-            videoWithSubtitle()
-        }
-
-        def mainSubtitleContainer = videoWithSubtitle().parent().parent().parent()
-        def swedishSubtitle = mainSubtitleContainer.find("span", text: "Swedish")
-        if (!swedishSubtitle) {
-            swedishSubtitle = mainSubtitleContainer.next().find("span", text: "Swedish")
-        }
-
-        if(!swedishSubtitle) {
-            mainSubtitleContainer.next().find("span", text: "Swedish")
-            println("No Swedish sub found")
-            println("$youtubeUrl Done!")
-            return
-        }
-
-        def subtitles = swedishSubtitle.parent()
-        def srtButton = subtitles.find("button", text: "SRT")
-        srtButton.click()
-
-        sleep(3000)
-
-        go "https://y2down.cc/en/youtube-playlist.html"
-        waitFor { $("#link")}
-        $("#link").value("$youtubeUrl")
-        $("#format").click()
-        $("#format").find("option").find{ it.value() == "mp3" }.click()
-        $('#load').click()
-        waitFor(8) { $('.download-card') }
-
-        def downloadMp3Button = {
-            $('.download-card').find("button", text: "Download")
-        }
-        waitFor(300) { downloadMp3Button() }
-        waitFor(300) { downloadMp3Button().attr("disabled") != "" }
-        waitFor(300) { downloadMp3Button().attr("disabled") != "true" }
-
-        $('.download-card').find("button", text: "Download").click()
-        sleep(3000)
-
-        println("$youtubeUrl Done!")
-    }
-}
 
 def translateSvToEn(sv) {
     def serviceUrl = "https://translate.google.com/?sl=sv&tl=en"
@@ -102,26 +56,39 @@ def links = [
         "https://skojig.com/img/normal/20231026/BSIE/20231026.jpg"
 ];
 
-def dir = "/Users/satyendra.kumar/Documents/Swedish_Media"
+def dir = "/Users/satyendra.kumar/Documents/Swedish_Media/All_Subs/YouTube"
 def files = []
 
 new File(dir).eachFileRecurse {
-    if(it.name.endsWith(".srt")) {
+    if(isSwedishSrt(it) && !existsInEnglish(it)) {
         files.add(it.path)
     }
+}
+
+println("Files to translate: ${files.size()}, ${files.join("\n")}")
+
+private static boolean existsInEnglish(File it) {
+    new File(it.parent + "/"  + it.name.replace(".sv.srt", ".en.srt")).exists()
+}
+
+private static boolean isSwedishSrt(File it) {
+    it.name.endsWith(".sv.srt")
 }
 
 
 //println String.format("%02d:%02d:%02d,%03d", 0, 8, 5, 6)
 
-files.take(0).forEach { file ->
-    println("File: $file")
+int done = 0
+files.forEach { String file ->
+    println("File (${files.size() - done}): $file")
     File svSrt = new File(file)
-    File enSrt = new File(svSrt.parent + "/"  + svSrt.name.replace(".srt", "_EN.srt"))
+    File enSrt = new File(svSrt.parent + "/"  + svSrt.name.replace(".sv.srt", ".en.srt"))
 
     if(!enSrt.exists())
         translateSrt(file, enSrt)
     else println("$enSrt exists")
+
+    done++
 }
 
 private def translateSrt(file, File saveHere) {
@@ -145,6 +112,8 @@ private def translateSrt(file, File saveHere) {
             break
         }
     }
+
+    if(futures.isEmpty()) return
 
     String enSrt = futures.stream()
             .reduce((chunk1Future, chunk2Future) ->
