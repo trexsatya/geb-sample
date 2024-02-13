@@ -66,6 +66,7 @@ public final class SRTParser {
     }
 
     private static ArrayList<Subtitle> parseUsingText(String path) {
+        println "Parsing srt file $path"
         Subtitle subtitle
         def srtText = new File(path).text
         def blocks = srtText.split("\n")
@@ -76,7 +77,7 @@ public final class SRTParser {
                 addSubtitleIfValid(subtitle, subtitles)
 
                 subtitle = new Subtitle()
-                subtitle.id = block.toInteger()
+                subtitle.id = block.findAll( /\d+/ )*.toInteger().first()
                 return
             }
             if (block.contains("-->")) {
