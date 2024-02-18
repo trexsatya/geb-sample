@@ -175,7 +175,7 @@ public class DbService implements AutoCloseable {
     }
 
     private static DbService getDb() {
-        new DbService("bolt://localhost:7687", "satya", "Alpha_1234")
+        new DbService("bolt://localhost:7687", "satya", System.getenv("DB_PWD"))
     }
 
     private static void addSwedishWords(File file, DbService dictionary) {

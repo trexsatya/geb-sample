@@ -19,7 +19,7 @@ System.setProperty("geb.env", "firefox")
 //extractLinks("https://sv.wiktionary.org/w/index.php?title=Kategori:Svenska/Vardagligt")
 
 @Field
-DbService db = new DbService("bolt://localhost:7687", "satya", "Alpha_1234")
+DbService db = new DbService("bolt://localhost:7687", "satya", System.getenv("DB_PWD"))
 
 @Field
 File errorFile = new File("/Users/satyendra.kumar/Documents/PersonalProjects/geb-sample/errors.log")

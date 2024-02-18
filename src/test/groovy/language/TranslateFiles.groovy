@@ -183,7 +183,7 @@ private def translateText(String text) {
 }
 
 @Field
-DbService db = new DbService("bolt://localhost:7687", "satya", "Alpha_1234")
+DbService db = new DbService("bolt://localhost:7687", "satya", System.getenv("DB_PWD"))
 
 private void translateWordsFromDb(DbService db) {
     def wordsToTranslate = db.getWordsToTranslate().collect { it.toString() }
