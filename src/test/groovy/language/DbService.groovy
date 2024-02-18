@@ -2,7 +2,7 @@ package language
 
 import com.google.common.base.CharMatcher
 import groovy.json.JsonSlurper
-import org.apache.commons.exec.util.StringUtils
+import org.apache.commons.lang3.StringUtils
 
 import javax.script.*
 import org.neo4j.driver.AuthTokens;
@@ -65,7 +65,48 @@ public class DbService implements AutoCloseable {
         }
     }
 
-    List getWordsToProcess() {
+
+    List getWordsToTranslate() {
+        try (var session = driver.session()) {
+            var greeting = session.executeWrite(tx -> {
+                var query = new Query(
+                        "match (n) where n.wikiProcessed=true and isEmpty(n.translations) return n.text as word"
+                );
+                var result = tx.run(query);
+                return result.list()
+            });
+            return greeting.collect { it.get(0) }
+        }
+    }
+
+    void addTranslation(String word, List<String> translations) {
+        addTranslations([(word): translations])
+    }
+
+    void addTranslations(Map<String, List<String>> translationsMap) {
+        def sanitize = { String word, List<String> translations ->
+            word = StringUtils.strip(word, "\"")
+            translations = translations.collect { StringUtils.strip(it, "\"").replaceAll("\"", "") }
+
+            return [word, translations]
+        }
+
+        try (var session = driver.session()) {
+            var greeting = session.executeWrite(tx -> {
+                translationsMap.each {
+                    def (word, translations) = sanitize(it.key, it.value)
+
+                    var query = new Query(
+                            "match (n) where n.text=\$word set n.translations = coalesce(n.translations, []) + [\$translations]",
+                            [word: "$word".toString(), translations: translations.join(",")]
+                    );
+                    tx.run(query);
+                }
+            });
+        }
+    }
+
+    List getWordsToProcessWiki() {
         try (var session = driver.session()) {
             var greeting = session.executeWrite(tx -> {
                 var query = new Query(

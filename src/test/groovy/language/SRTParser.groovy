@@ -65,10 +65,8 @@ public final class SRTParser {
         return parseUsingText(path)
     }
 
-    private static ArrayList<Subtitle> parseUsingText(String path) {
-        println "Parsing srt file $path"
+    public static ArrayList<Subtitle> textToSubtitle(String srtText) {
         Subtitle subtitle
-        def srtText = new File(path).text
         def blocks = srtText.split("\n")
         def subtitles = new ArrayList<>();
         blocks.each { block ->
@@ -97,6 +95,14 @@ public final class SRTParser {
         addSubtitleIfValid(subtitle, subtitles)
 
         return subtitles
+    }
+
+    private static ArrayList<Subtitle> parseUsingText(String path) {
+        println "Parsing srt file $path"
+        def srtText = new File(path).text
+        if(!srtText || srtText.trim().length() == 0) return []
+
+        return textToSubtitle(srtText)
     }
 
     private static void addSubtitleIfValid(Subtitle subtitle, ArrayList<Object> subtitles) {
@@ -179,7 +185,7 @@ final class SRTUtils {
     private final static long MILLIS_IN_MINUTE = MILLIS_IN_SECOND * 60; // 60000
     private final static long MILLIS_IN_HOUR = MILLIS_IN_MINUTE * 60; // 3600000
 
-    private final static Pattern PATTERN_TIME = Pattern.compile("([\\d]{2}):([\\d]{2}):([\\d]{2}),([\\d]{3})");
+    private final static Pattern PATTERN_TIME = Pattern.compile("([\\d]{2}):([\\d]{2}):([\\d]{2})[,.]([\\d]{3})");
 
     private final static int PATTER_TIME_GROUP_HOURS = 1;
     private final static int PATTER_TIME_GROUP_MINUTES = 2;
@@ -202,7 +208,7 @@ final class SRTUtils {
         if (time == null) throw new NullPointerException("Time should not be null");
 
         Matcher matcher = PATTERN_TIME.matcher(time);
-        if (time.isEmpty() || !matcher.find()) throw new Exception("incorrect time format...");
+        if (time.isEmpty() || !matcher.find()) throw new IllegalArgumentException("incorrect time format...");
 
         long msTime = 0;
         short hours = Short.parseShort(matcher.group(PATTER_TIME_GROUP_HOURS));
@@ -272,7 +278,7 @@ final class SRTUtils {
             else if (listSubtitles.size() <= i+1) // check if is the last element
                 continue;
 
-            // get next element to TranslateSrtFiles
+            // get next element to TranslateFiles
             sub = listSubtitles.get(i+1);
             if (sub.timeIn >= timeMillis)
                 return sub;
@@ -356,7 +362,8 @@ class Subtitle {
 
     @Override
     public String toString() {
-        return "language.Subtitle [id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", text=" + text+ ", timeIn=" + timeIn + ", timeOut=" + timeOut + "]";
+        def it = this
+        return "${it.id}\n${it.startTime} --> ${it.endTime}\n${it.text}\n\n"
     }
 
 }

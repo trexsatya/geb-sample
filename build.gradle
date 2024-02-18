@@ -37,6 +37,7 @@ dependencies {
     implementation "org.graalvm.js:js:23.0.1"
     implementation "org.graalvm.js:js-scriptengine:23.0.1"
     implementation 'org.apache.commons:commons-text:1.11.0'
+    implementation 'com.pivovarit:parallel-collectors:+'
 
 //    implementation 'org.seleniumhq.selenium:selenium-firefox-driver:4.1.0'
     implementation 'org.seleniumhq.selenium:selenium-support:4.1.0'
